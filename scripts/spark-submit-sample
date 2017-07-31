@@ -1,0 +1,35 @@
+//resource pooling
+spark-submit \
+            --master yarn-client \
+            --num-executors 35 \
+            --executor-cores 20 \
+            --executor-memory 32G \
+            --driver-cores 8 \
+            --driver-memory 10G \
+            --conf spark.driver.maxResultSize=4G \
+            GradientBoostRegression-assembly-0.2.jar "20170518" "srikanth-bellary"
+
+//conservative resource pooling
+spark-submit \
+            --master yarn-client \
+            --num-executors 24 \
+            --executor-cores 5 \
+            --executor-memory 12G \
+            --driver-cores 2 \
+            --driver-memory 4G
+            /tmp/ot2b/second_iteration/sbt-02/target/scala-2.10/GBTRegression-assembly-0.4.jar
+
+//this is used for ALS batch impressions
+spark-submit \
+            --num-executors 45 \
+            --executor-cores 10 \
+            --executor-memory 12G \
+            --driver-cores 2 \
+            --driver-memory 20G \
+            --conf spark.shuffle.io.numConnectionsPerPeer=1 \
+            --conf spark.shuffle.sort.bypassMergeThreshold=1000 \
+            --conf spark.shuffle.consolidateFiles=true \
+            --conf spark.shuffle.file.buffer=2048k \
+            --conf spark.yarn.executor.memoryOverhead=8000 \
+			/tmp/ot2b/second_iteration/sbt-02/target/scala-2.10/GBTRegression-assembly-0.4.jar
+            --class com.cars.bigdata.alsimpressionbatch.Main \
